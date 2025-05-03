@@ -1,5 +1,6 @@
+import { useCart } from "./AppContext";
 import sneakers from "../assets/images/logo.svg";
-import cart from "../assets/images/icon-cart.svg";
+import cartIcon from "../assets/images/icon-cart.svg";
 import avatar from "../assets/images/image-avatar.png";
 import { useState } from "react";
 import menu from "../assets/images/icon-menu.svg";
@@ -9,6 +10,8 @@ import close from "../assets/images/icon-close.svg";
 const lists = ["Collections", "Men", "Women", "About", "Contact"];
 
 const Navbar = () => {
+  const { cart } = useCart();
+
   const [cartIsOpen, setCartIsOpen] = useState(false);
   const [activeList, setActiveList] = useState(lists[0]);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -69,7 +72,8 @@ const Navbar = () => {
               className="sm:hidden block w-[20px]"
               onClick={handleMobileMenuToggle}
             />
-            <img src={sneakers} alt="logo " />
+            {/*logo*/}
+            <img src={sneakers} alt="logo " className="cursor-pointer" />
             <ul className="sm:flex gap-6 font-[400] text-[16px] text-Dark_grayish_blue hidden">
               {lists.map((list, index) => {
                 return (
@@ -94,12 +98,24 @@ const Navbar = () => {
             </ul>
           </div>
           <div className="flex items-center sm:mr-12 mr-6 h-[60px] sm:w-[120px] w-[80px] sm:gap-[40px] gap-[20px]">
-            <img
-              src={cart}
-              alt="cart"
-              className="cursor-pointer"
-              onClick={handleCartToggle}
-            />
+            <div className="h-full">
+              {" "}
+              <div
+                className={`${
+                  cart.length === 0 ? "hidden" : "block"
+                } absolute w-3 h-3 mt-4 rounded-full p-1 px-2 text-white flex justify-center items-center ml-4 bg-Orange text-[10px]`}
+              >
+                {cart.map((item) => {
+                  return <p key={item.id}>{item.quantity}</p>;
+                })}
+              </div>
+              <img
+                src={cartIcon}
+                alt="cart"
+                className="cursor-pointer mt-5"
+                onClick={handleCartToggle}
+              />
+            </div>
             <div className="hover:border-2 hover:border-Orange rounded-full">
               <img
                 src={avatar}

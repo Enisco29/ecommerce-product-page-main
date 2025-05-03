@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useCart } from "./AppContext";
 import img1 from "../assets/images/image-product-1-thumbnail.jpg";
 import img2 from "../assets/images/image-product-2-thumbnail.jpg";
 import img3 from "../assets/images/image-product-3-thumbnail.jpg";
@@ -17,7 +18,18 @@ import next from "../assets/images/icon-next.svg";
 const images = [img1, img2, img3, img4];
 const mainImages = [mainImg1, mainImg2, mainImg3, mainImg4];
 
+const product = {
+  id: 1,
+  name: "Sneaker Company",
+  title: "Fall Limited Edition Sneakers",
+  description:
+    "These low-profile sneakers are your perfect casual wear companion. Featuring a durable rubber outer sole, they’ll withstand everything the weather can offer.",
+  price: 125.0,
+  image: img1,
+};
+
 const Content = () => {
+  const { addToCart } = useCart();
   const [selectedImage, setSelectedImage] = useState(mainImages[0]);
   const [count, setCount] = useState(0);
   const [activeIndex, setActiveIndex] = useState(images[0]);
@@ -52,6 +64,12 @@ const Content = () => {
       mainImages[currentIndex === mainImages.length - 1 ? 0 : currentIndex + 1];
     setSelectedImage(nextImage);
     setActiveIndex(images[mainImages.indexOf(nextImage)]);
+  };
+
+  const handleAddToCart = () => {
+    if (count > 0) {
+      addToCart({ ...product, quantity: count });
+    }
   };
 
   const minusClick = () => {
@@ -128,7 +146,7 @@ const Content = () => {
           {selectedImage && (
             <div className="flex justify-center items-center relative">
               <div
-                className="p-4 px-5 bg-white rounded-full cursor-pointer mr-[-70px] z-10"
+                className="p-4 px-5 bg-white sm:hidden  rounded-full cursor-pointer mr-[-70px] z-10"
                 onClick={handlePrev}
               >
                 {" "}
@@ -141,7 +159,7 @@ const Content = () => {
                 onClick={handleGalleryView}
               />
               <div
-                className="p-4 px-5 bg-white rounded-full cursor-pointer ml-[-70px] z-10"
+                className="p-4 px-5 bg-white sm:hidden rounded-full cursor-pointer ml-[-70px] z-10"
                 onClick={handleNext}
               >
                 <img src={next} alt="next" />
@@ -170,23 +188,20 @@ const Content = () => {
             })}
           </div>
         </div>
+
         <div className="flex flex-col sm:w-[450px] w-[90%] gap-4 ">
           <p className="text-Dark_grayish_blue font-bold uppercase text-[14px]">
-            {" "}
-            Sneaker Company
+            {product.name}
           </p>
           <h1 className="font-bold leading-[45px] text-Very_dark_blue text-[40px]">
-            Fall Limited Edition Sneakers
+            {product.title}
           </h1>
           <p className="text-Dark_grayish_blue text-[16px] mt-3">
-            {" "}
-            These low-profile sneakers are your perfect casual wear companion.
-            Featuring a durable rubber outer sole, they’ll withstand everything
-            the weather can offer.
+            {product.description}
           </p>
           <div className="sm:flex sm:flex-col sm:items-start flex flex-row justify-between items-center">
             <div className="flex flex-row justify-between items-center w-[170px]">
-              <p className="font-bold text-[28px]"> $125.00</p>
+              <p className="font-bold text-[28px]"> ${product.price}.00</p>
               <p className="bg-Black text-white p-0.5 text-[16px] rounded-lg px-3">
                 {" "}
                 50%
@@ -209,7 +224,10 @@ const Content = () => {
                 <img src={plus} alt="plus-icon" />
               </button>
             </div>
-            <button className="flex justify-center p-3 font-semibold mt-4 sm:mt-0 bg-Orange rounded-lg sm:w-[250px] w-full items-center gap-2 hover:opacity-70">
+            <button
+              className="flex justify-center p-3 font-semibold mt-4 sm:mt-0 bg-Orange rounded-lg sm:w-[250px] w-full items-center gap-2 hover:opacity-70"
+              onClick={handleAddToCart}
+            >
               <img
                 src={cart}
                 alt="cart-icon"
